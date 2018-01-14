@@ -1,0 +1,16 @@
+{%  extends "base.html" %}
+{% block title %} Los blogs {% endblock %}
+
+{% block content %}
+
+    <h1>Listado de blogs</h1>
+
+    {%  for blog in blogs %}
+
+        <div class="blogs">
+            <h3>{{ blog.user.username }} - {{ blog.user.name }} {{ blog.user.surname }}</h3>
+        </div>
+
+    {%  endfor %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{%  extends "base.html" %}
+
+{% block content %}
+
+    <h1>Últimos posts</h1>
+
+    {%  for post in posts %}
+
+        <div class="post_home">
+            <h3>{{ post.user.username }} - {{ post.title }}</h3>
+            <h5>{{ post.summary }}</h5>
+        </div>
+
+    {%  endfor %}
+
+{% endblock %}

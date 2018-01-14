@@ -1,0 +1,16 @@
+{%  extends "base.html" %}
+{% block title %} Blog de {{ blog.user.username }} {% endblock %}
+
+{% block content %}
+
+    <h1>Blog de {{ blog.user.username }}</h1>
+
+    {%  for post in blog %}
+
+        <div class="posts">
+             <h5>{{ post.user.username }} - {{ post.title }} - {{ post.summary }}</h5>
+        </div>
+
+    {%  endfor %}
+
+{% endblock %}
