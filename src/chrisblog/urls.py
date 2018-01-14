@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from posts.views import home, blogs_list, blog_detail, post_detail, newpost, signup
+from posts.views import home, blogs_list, post_detail, NewPostView, MyPostsView
 from users.views import logout, loginView, signupView
 
 urlpatterns = [
@@ -25,11 +25,11 @@ urlpatterns = [
     path('login/', loginView.as_view(), name = "login_page"),
     path('logout/', logout, name = "logout_page"),
 
-    path('blogs/<char: blogger>/<int: pk>', post_detail),
-    path('blogs/<char: blogger>', blog_detail),
+    path('blogs/<str:username>/<int:pk>', post_detail, name = "post_detail_page"),
+    path('blogs/<str:username>/', MyPostsView.as_view()),
     path('blogs/', blogs_list, name = "blogslist"),
 
-    path('new-post/', newpost),
+    path('new-post/', NewPostView.as_view(), name = "newpost_page"),
     path('signup/', signupView.as_view(), name = "signup_page"),
 
     path('', home, name = "home_page")

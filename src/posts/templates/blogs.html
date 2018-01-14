@@ -8,7 +8,7 @@
     {%  for blog in blogs %}
 
         <div class="blogs">
-            <h3>{{ blog.user.username }} - {{ blog.user.name }} {{ blog.user.surname }}</h3>
+            <h3>{{ blog.username }} - {{ blog.first_name }} {{ blog.last_name }}</h3>
         </div>
 
     {%  endfor %}
