@@ -5,40 +5,37 @@ from django.core.checks import messages
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from posts.forms import NewPostForm
 from posts.models import Post
 
 
-def home (request):
-    latest_posts = Post.objects.all().order_by("-publication_date")
+class HomeView(ListView):
+    model = Post
+    template_name = "home.html"
 
-    if len(latest_posts) == 0:
-        return render(request, "404.html", status=404)
-    else:
-        context = {'posts': latest_posts[:5]}
-        return render(request, "home.html", context)
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        return queryset.order_by("-publication_date")
 
-def blogs_list (request):
+class PostDetailView(DetailView):
+    model = Post
+    template_name = "post_detail_page.html"
 
-    allblogs = User.objects.all()
+    def get_queryset(self):
+        autor = self.kwargs.get('username')
+        pk = self.kwargs.get('pk')
+        queryset = Post.objects.filter(user__username=autor, pk=pk)
+        return queryset
 
-    if len(allblogs) == 0:
-        return render(request, "404.html", status=404)
-    else:
-        context = {'blogs': allblogs}
-        return render(request, "blogs.html", context)
+class BlogsListView(ListView):
+    model = User
+    template_name = "blogs.html"
 
-def blog_detail(request,blogger):
-
-    blog = Post.objects.filter(user=blogger)
-
-    if len(blog) == 0:
-        return render(request, "404.html", status=404)
-    else:
-        context = {'blog': blog}
-        return render(request, "blogdetail.html", context)
+    def get_queryset(self):
+        queryset = User.objects.all()
+        return queryset
 
 class NewPostView(LoginRequiredMixin, View):
 
@@ -69,21 +66,11 @@ class MyPostsView(ListView):
         username = self.kwargs.get('username')
         return queryset.filter(user__username=username).order_by('-publication_date')
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, *args, **kwargs): #función para meter info del usuario de la URL blogs/username
         context = super().get_context_data(*args, **kwargs)
-        username = self.kwargs.get('username')
-        user = get_object_or_404(User, username=username)
-        context['username'] = user
+        autor = self.kwargs.get('username')
+        user = get_object_or_404(User, username=autor)
+        context['autor'] = user
         return context
-
-@login_required
-def post_detail(request, user, pk):
-    possible_posts = Post.objects.filter(user=user, pk=pk).select_related("category")
-    if len(possible_posts) == 0:
-        return render(request, "404.html", status=404)
-    else:
-        post = possible_posts[0]
-        context = {'post': post}
-        return render(request, "post_detail_page.html", context)
 
 

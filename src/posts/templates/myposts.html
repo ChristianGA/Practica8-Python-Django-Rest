@@ -4,6 +4,8 @@
 
 {% block content %}
 
+    <h1>Los posts de {{autor.username}}</h1>
+
     {% include "posts_list.html" with posts=object_list %}
 
 {% endblock %}
