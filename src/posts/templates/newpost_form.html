@@ -4,13 +4,13 @@
 
 {% block content %}
 
-    <h1>Create new post</h1>
+    <h1>Create new post by {{ user.username }}</h1>
 
     {%  if messages %}
 
         {% for message in messages %}
             {% autoescape off %}
-                <div class="alert alert-success">{{ message }}</div>
+                <div>{{ message }}</div>
             {% endautoescape %}
         {% endfor %}
 

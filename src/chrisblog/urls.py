@@ -24,13 +24,22 @@ urlpatterns = [
 
     path('login/', loginView.as_view(), name = "login_page"),
     path('logout/', logout, name = "logout_page"),
-
     path('blogs/<str:username>/<int:pk>', PostDetailView.as_view(), name = "post_detail_page"),
     path('blogs/<str:username>/', MyPostsView.as_view(), name = "post_detail"),
     path('blogs/', BlogsListView.as_view(), name = "blogslist"),
-
     path('new-post/', NewPostView.as_view(), name = "newpost_page"),
     path('signup/', signupView.as_view(), name = "signup_page"),
+    path('', HomeView.as_view(), name = "home_page"),
 
-    path('', HomeView.as_view(), name = "home_page")
+    # API REST
+
+    path('api/1.0/users/<int:pk>/', UserDetailUpdateDeleteAPI.as_view(), name = "api_user_detailcreatedelete"),
+    path('api/1.0/users/', UserCreateAPI.as_view(), name = "api_user_creation"),
+
+    path('api/1.0/blogs/', BlogsListAPI.as_view(), name = "api_blogs_list"),
+
+    path('api/1.0/posts/<str:username>/<int:pk>/', PostDetailUpdateDeleteAPI.as_view(), name = "api_post_detailcreatedelete"),
+    path('api/1.0/posts/<str:username>/', PostListAPI.as_view(), name = "api_post_list"),
+    path('api/1.0/posts/', PostCreateAPI.as_view(), name = "api_post_creation")
+
 ]
