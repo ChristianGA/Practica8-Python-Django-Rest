@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from posts.api import BlogsListAPI, PostDetailUpdateDeleteAPI, PostListAPI, PostCreateAPI
 from posts.views import NewPostView, MyPostsView, BlogsListView, HomeView, PostDetailView
+from users.api import UserDetailUpdateDeleteAPI, UserCreateAPI
 from users.views import logout, loginView, signupView
 
 urlpatterns = [

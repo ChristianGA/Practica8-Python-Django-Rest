@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class UserPermission(BasePermission):
+class UserpostPermission(BasePermission):
 
     def has_permission(self, request, view):
         return request.method == "GET" or request.user.is_authenticated
