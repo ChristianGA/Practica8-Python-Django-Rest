@@ -42,3 +42,11 @@ class PostCreateAPI(CreateAPIView):
 class PostDetailUpdateDeleteAPI(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     permission_classes = [UserpostPermission]
+
+    def get_queryset(self):
+        autor = self.kwargs.get('username')
+        queryset = Post.objects.filter(user__username=autor)
+        user = self.request.user
+        if user.is_authenticated != autor and not user.is_superuser:
+            queryset = queryset.filter(publication_date__isnull = True)
+        return queryset
