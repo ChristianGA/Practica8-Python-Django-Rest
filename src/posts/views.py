@@ -3,9 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.datetime_safe import datetime
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from posts.forms import NewPostForm
 from posts.models import Post
@@ -17,7 +18,7 @@ class HomeView(ListView):
 
     def get_queryset(self):
         queryset = Post.objects.all()
-        return queryset.order_by("-publication_date")
+        return queryset.filter(publication_date__lte=datetime.now()).order_by("-publication_date")
 
 class PostDetailView(DetailView):
     model = Post
@@ -37,24 +38,16 @@ class BlogsListView(ListView):
         queryset = User.objects.all()
         return queryset
 
-class NewPostView(LoginRequiredMixin, View):
 
-    def get(self, request):
-        form = NewPostForm()
-        return render(request, "newpost_form.html", {'form': form})
+class NewPostView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = NewPostForm
+    template_name = "newpost_form.html"
+    success_url = reverse_lazy('home_page')
 
-    def post(self, request):
-        post = Post()
-        post.user = request.user
-        form = NewPostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save()
-            form = NewPostForm()
-            url = reverse("post_detail_page", args=[post.pk])
-            message = "Post created successfully! "
-            message += '<a href="{0}">View</a>'.format(url)
-            messages.success(request, message)
-        return render(request, "newpost_form.html", {'form': form})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(NewPostView, self).form_valid(form)
 
 class MyPostsView(ListView):
 
